@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác suất Thống kê</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #34495e;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        button {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2ecc71;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            margin: 40px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .textarea-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Giải bài toán Xác suất Thống kê</h1>
+        
+        <form action="/solve" method="POST">
+            <label for="problem_type">Chọn loại bài toán:</label>
+            <select id="problem_type" name="problem_type">
+                <option value="simple_probability">Tính xác suất đơn giản</option>
+                <option value="mean_variance_std">Kỳ vọng, Phương sai, Độ lệch chuẩn</option>
+                <option value="binomial">Phân phối nhị thức</option>
+                <option value="normal_distribution">Phân phối chuẩn</option>
+                <option value="poisson">Phân phối Poisson</option>
+                <option value="text_problem">Nhập bài toán dưới dạng văn bản</option>
+            </select>
+
+            <div id="inputs"></div>
+            
+            <div id="text_problem" class="textarea-container">
+                <label for="text_input">Nhập bài toán:</label>
+                <textarea id="text_input" name="text_input" rows="5" cols="40" placeholder="Nhập bài toán của bạn..."></textarea>
+            </div>
+
+            <button type="submit">Giải bài toán</button>
+        </form>
+    </div>
+
+    <script>
+        const problemType = document.getElementById('problem_type');
+        const inputsDiv = document.getElementById('inputs');
+        const textProblemDiv = document.getElementById('text_problem');
+
+        problemType.addEventListener('change', function () {
+            const type = problemType.value;
+            let html = '';
+
+            if (type === 'simple_probability') {
+                html = `
+                    <label for="favorable">Số kết quả thuận lợi:</label>
+                    <input type="number" id="favorable" name="favorable" required>
+                    <label for="total">Tổng số kết quả:</label>
+                    <input type="number" id="total" name="total" required>
+                `;
+                textProblemDiv.style.display = 'none';
+            } else if (type === 'mean_variance_std') {
+                html = `
+                    <label for="data">Nhập dãy số liệu (ngăn cách bởi dấu cách):</label>
+                    <input type="text" id="data" name="data" required>
+                `;
+                textProblemDiv.style.display = 'none';
+            } else if (type === 'binomial') {
+                html = `
+                    <label for="n">Số lần thử (n):</label>
+                    <input type="number" id="n" name="n" required>
+                    <label for="p">Xác suất thành công (p):</label>
+                    <input type="number" step="0.01" id="p" name="p" required>
+                    <label for="k">Số thành công mong muốn (k):</label>
+                    <input type="number" id="k" name="k" required>
+                `;
+                textProblemDiv.style.display = 'none';
+            } else if (type === 'normal_distribution') {
+                html = `
+                    <label for="mean">Kỳ vọng (mean):</label>
+                    <input type="number" id="mean" name="mean" required>
+                    <label for="std_dev">Độ lệch chuẩn (std_dev):</label>
+                    <input type="number" id="std_dev" name="std_dev" required>
+                    <label for="x">Giá trị cần tính xác suất (x):</label>
+                    <input type="number" id="x" name="x" required>
+                `;
+                textProblemDiv.style.display = 'none';
+            } else if (type === 'poisson') {
+                html = `
+                    <label for="lambda">Giá trị lambda:</label>
+                    <input type="number" step="0.01" id="lambda" name="lambda" required>
+                    <label for="k">Số sự kiện k:</label>
+                    <input type="number" id="k" name="k" required>
+                `;
+                textProblemDiv.style.display = 'none';
+            } else if (type === 'text_problem') {
+                textProblemDiv.style.display = 'block';
+                inputsDiv.innerHTML = '';
+            } else {
+                inputsDiv.innerHTML = '';
+                textProblemDiv.style.display = 'none';
+            }
+
+            inputsDiv.innerHTML = html;
+        });
+    </script>
+</body>
+</html>
